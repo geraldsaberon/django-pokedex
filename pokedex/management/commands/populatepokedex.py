@@ -28,6 +28,7 @@ class Command(BaseCommand):
                 pokemon_id = res_json["id"]
                 name = res_json["name"]
                 sprite = res_json["sprites"]["front_default"]
+                sprite_slug = f"/static/pokemon-sprites/{os.path.split(sprite)[1]}"
                 abilities = [row["ability"]["name"] for row in res_json["abilities"]]
                 types = [row["type"]["name"] for row in res_json["types"]]
                 stats = [(row["stat"]["name"], row["base_stat"]) for row in res_json["stats"]]
@@ -49,7 +50,8 @@ class Command(BaseCommand):
                 p = Pokemon(
                     pokemon_number=pokemon_id,
                     name=name,
-                    sprite=sprite_save_path)
+                    sprite=sprite_save_path,
+                    sprite_slug=sprite_slug)
                 p.save()
 
                 for ability in abilities:

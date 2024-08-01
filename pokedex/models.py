@@ -17,6 +17,7 @@ class Pokemon(models.Model):
     pokemon_number = models.SmallIntegerField(unique=True)
     name = models.CharField(max_length=100, unique=True)
     sprite = models.URLField()
+    sprite_slug = models.CharField(max_length=100)
     types = models.ManyToManyField(PokemonType)
     abilities = models.ManyToManyField(Ability)
     def __str__(self):
