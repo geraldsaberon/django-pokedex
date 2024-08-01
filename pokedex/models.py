@@ -21,6 +21,9 @@ class Pokemon(models.Model):
     abilities = models.ManyToManyField(Ability)
     def __str__(self):
         return self.name
+    @property
+    def pokeNumberId(self):
+        return str(self.pokemon_number).zfill(4)
 
 class Stat(models.Model):
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
