@@ -43,14 +43,15 @@ class Command(BaseCommand):
                 print(f"\n|| ||")
 
                 image_res = requests.get(sprite, stream=True)
+                sprite_file = sprite_save_path / os.path.split(sprite)[1]
                 if image_res.status_code == 200:
-                    with open(sprite_save_path/f"{sprite.rsplit("/", 1)[1]}", "wb") as f:
+                    with open(sprite_file, "wb") as f:
                         copyfileobj(image_res.raw, f)
 
                 p = Pokemon(
                     pokemon_number=pokemon_id,
                     name=name,
-                    sprite=sprite_save_path,
+                    sprite=sprite_file,
                     sprite_slug=sprite_slug)
                 p.save()
 
