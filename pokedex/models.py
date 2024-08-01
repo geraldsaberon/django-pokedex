@@ -14,6 +14,7 @@ class Ability(models.Model):
         verbose_name_plural = "Abilities"
 
 class Pokemon(models.Model):
+    pokemon_number = models.SmallIntegerField(unique=True)
     name = models.CharField(max_length=100, unique=True)
     sprite = models.URLField()
     types = models.ManyToManyField(PokemonType)

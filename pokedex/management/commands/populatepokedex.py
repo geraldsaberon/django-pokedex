@@ -25,13 +25,14 @@ class Command(BaseCommand):
             if res.status_code == 200:
                 res_json = res.json()
 
+                pokemon_id = res_json["id"]
                 name = res_json["name"]
                 sprite = res_json["sprites"]["front_default"]
                 abilities = [row["ability"]["name"] for row in res_json["abilities"]]
                 types = [row["type"]["name"] for row in res_json["types"]]
                 stats = [(row["stat"]["name"], row["base_stat"]) for row in res_json["stats"]]
 
-                print(f"|| name: {name}")
+                print(f"|| {str(pokemon_id).zfill(4)} {name} ")
                 print(f"|| || sprite: {sprite}")
                 print(f"|| || abilities: {abilities}")
                 print(f"|| || types: {types}")
@@ -45,7 +46,10 @@ class Command(BaseCommand):
                     with open(sprite_save_path/f"{sprite.rsplit("/", 1)[1]}", "wb") as f:
                         copyfileobj(image_res.raw, f)
 
-                p = Pokemon(name=name, sprite=sprite_save_path)
+                p = Pokemon(
+                    pokemon_number=pokemon_id,
+                    name=name,
+                    sprite=sprite_save_path)
                 p.save()
 
                 for ability in abilities:
