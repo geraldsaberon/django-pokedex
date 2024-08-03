@@ -1,6 +1,6 @@
 <h1>Edit: {{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
 <img src="{{ pokemon.sprite_slug }}">
-<form action="{% url 'pokedex:pokemon-edit' pokemon.pokeNumberId %}" method="post">
+<form action="{% url 'pokedex:pokemon-edit' pokemon.pk %}" method="post">
     {% csrf_token %}
     {{ form.errors }}
     {% for field in form %}

@@ -17,15 +17,13 @@ class IndexView(generic.ListView):
 class PokemonView(generic.DetailView):
     model = Pokemon
     template_name = "pokedex/pokemon_details.html"
-    slug_field = "pokemon_number"
-    slug_url_kwarg = "pokemon_number"
 
 class PokemonEditView(View):
     template_name = "pokedex/pokemon_edit.html"
     form_class = PokemonEditForm
 
-    def get(self, request, pokemon_number):
-        pokemon = get_object_or_404(Pokemon, pokemon_number=pokemon_number)
+    def get(self, request, pk):
+        pokemon = get_object_or_404(Pokemon, pk=pk)
 
         initial_form_data = {"name": pokemon.name,}
         for i, type_ in enumerate(pokemon.types.all()):
@@ -39,8 +37,8 @@ class PokemonEditView(View):
 
         return render(request, self.template_name, {"pokemon": pokemon, "form": form})
 
-    def post(self, request, pokemon_number):
-        pokemon = get_object_or_404(Pokemon, pokemon_number=pokemon_number)
+    def post(self, request, pk):
+        pokemon = get_object_or_404(Pokemon, pk=pk)
         form = self.form_class(request.POST)
         if form.is_valid():
             print(f"|| {form.cleaned_data=}")
@@ -67,6 +65,56 @@ class PokemonEditView(View):
 
             pokemon.save()
 
-            return HttpResponseRedirect(reverse("pokedex:pokemon-detail", args=[pokemon.pokeNumberId]))
+            return HttpResponseRedirect(reverse("pokedex:pokemon-detail", args=[pokemon.pk]))
         else:
             return render(request, self.template_name, {"pokemon": pokemon, "form": form})
+
+class PokemonCreateView(View):
+    template_name = "pokedex/pokemon_create.html"
+    form_class = PokemonEditForm
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+
+            if Pokemon.objects.filter(name=name).exists():
+                form.add_error("name", f"{name} already exists. Pokemon name must be unique")
+                return render(request, self.template_name, {"form": form})
+
+            pokemon = Pokemon(name=name)
+            pokemon.save()
+
+            pokemon.types.set([
+                form.cleaned_data.get("type1"),
+                form.cleaned_data.get("type2")
+            ])
+
+            pokemon.abilities.set([
+                form.cleaned_data.get("ability1"),
+                form.cleaned_data.get("ability2"),
+                form.cleaned_data.get("ability3")
+            ])
+
+            Stat(pokemon=pokemon, name="hp", base_stat=form.cleaned_data.get("hp")).save()
+            Stat(pokemon=pokemon, name="attack", base_stat=form.cleaned_data.get("attack")).save()
+            Stat(pokemon=pokemon, name="defense", base_stat=form.cleaned_data.get("defense")).save()
+            Stat(pokemon=pokemon, name="special-attack", base_stat=form.cleaned_data.get("special_attack")).save()
+            Stat(pokemon=pokemon, name="special-defense", base_stat=form.cleaned_data.get("special_defense")).save()
+            Stat(pokemon=pokemon, name="speed", base_stat=form.cleaned_data.get("speed")).save()
+
+            pokemon.save()
+
+            return HttpResponseRedirect(reverse("pokedex:pokemon-detail", args=[pokemon.pk]))
+        else:
+            return render(request, self.template_name, {"form": form})
+
+class PokemonDeleteView(View):
+    def post(self, request, pk):
+        pokemon = get_object_or_404(Pokemon, pk=pk)
+        pokemon.delete()
+        return HttpResponseRedirect(reverse("pokedex:index"))

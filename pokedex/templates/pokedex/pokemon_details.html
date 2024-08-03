@@ -17,4 +17,8 @@ Stats:
     {{ stat.name }}: {{ stat.base_stat }}
 {% endfor %}
 </p>
-<a href="{% url 'pokedex:pokemon-edit' pokemon.pokeNumberId %}">edit</a>
+<a href="{% url 'pokedex:pokemon-edit' pokemon.pk %}">edit</a>
+<form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="delete">
+</form>

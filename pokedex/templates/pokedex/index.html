@@ -1,8 +1,9 @@
+<a href="{% url 'pokedex:pokemon-create' %}">Create a pokemon!</a>
 {% if pokemons %}
 <ul>
     {% for pokemon in pokemons %}
         <li>
-            <a href="{% url 'pokedex:pokemon-detail' pokemon.pokeNumberId %}">
+            <a href="{% url 'pokedex:pokemon-detail' pokemon.pk %}">
                 {{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}
                 <img src="{{ pokemon.sprite_slug }}">
             </a>
