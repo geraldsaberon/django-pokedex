@@ -5,10 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Create Pokemon!</h1>
-    <form action="{% url 'pokedex:pokemon-create' %}" method="post" >
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Create!">
-    </form>
+    <div class="flex-col-center">
+        <h1>Create a Pokemon!</h1>
+        <form action="{% url 'pokedex:pokemon-create' %}" method="post" >
+        {% csrf_token %}
+        {{ form }}
+        <input class="mt-4" type="submit" value="Create!">
+        <a href="{% url 'pokedex:index' %}">Cancel</a>
+        </form>
+    </div>
 {% endblock %}
