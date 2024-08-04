@@ -7,16 +7,25 @@
 {% block content %}
     <a href="{% url 'pokedex:pokemon-create' %}">Create a pokemon!</a>
     {% if pokemons %}
-    <ul>
+        <div class="pokemon-grid">
         {% for pokemon in pokemons %}
-            <li>
-                <a href="{% url 'pokedex:pokemon-detail' pokemon.pk %}">
-                    {{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}
-                    <img src="{{ pokemon.sprite_slug }}">
-                </a>
-            </li>
+                <div class="pokemon-box">
+                    <a href="{% url 'pokedex:pokemon-detail' pokemon.pk %}">
+                        [{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}
+                        {% if pokemon.sprite_slug %}
+                            <img src="{{ pokemon.sprite_slug }}">
+                        {% else %}
+                            <div class="no-sprite">[no pic.]</div>
+                        {% endif %}
+                    </a>
+                    <div class="types">
+                        {% for type in pokemon.types.all %}
+                            <span class="pokemon-type {{ type.name }}">{{ type.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
         {% endfor %}
-    </ul>
+        </div>
     {% else %}
     <h1>No pokemons :(</h1>
     {% endif %}
