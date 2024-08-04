@@ -10,7 +10,7 @@ class IndexView(generic.ListView):
     context_object_name = "pokemons"
 
     def get_queryset(self):
-        return Pokemon.objects.all()
+        return Pokemon.objects.filter(is_deleted=False)
 
 class PokemonView(generic.DetailView):
     model = Pokemon
@@ -114,5 +114,6 @@ class PokemonCreateView(View):
 class PokemonDeleteView(View):
     def post(self, request, pk):
         pokemon = get_object_or_404(Pokemon, pk=pk)
-        pokemon.delete()
+        pokemon.is_deleted = True
+        pokemon.save()
         return redirect("pokedex:index")

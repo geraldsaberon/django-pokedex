@@ -20,6 +20,7 @@ class Pokemon(models.Model):
     sprite_slug = models.CharField(max_length=100)
     types = models.ManyToManyField(PokemonType)
     abilities = models.ManyToManyField(Ability)
+    is_deleted = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     @property
