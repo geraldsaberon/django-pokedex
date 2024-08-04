@@ -5,28 +5,37 @@
 {% endblock%}
 
 {% block content %}
-    <h1>{{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
-    <img src="{{ pokemon.sprite_slug }}">
-    <p>
-    {% for type in pokemon.types.all %}
-        {{ type.name | upper }}
-    {% endfor %}
-    </p>
-    <p>
-    Abilities:
-    {% for ability in pokemon.abilities.all %}
-        {{ ability.name }}
-    {% endfor %}
-    </p>
-    <p>
-    Stats:
-    {% for stat in pokemon.stat_set.all %}
-        {{ stat.name }}: {{ stat.base_stat }}
-    {% endfor %}
-    </p>
-    <a href="{% url 'pokedex:pokemon-edit' pokemon.pk %}">edit</a>
-    <form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="delete">
-</form>
+    <div class="flex-col-center">
+        <h1>{{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
+
+        <img src="{{ pokemon.sprite_slug }}">
+
+        <h2>Type</h2>
+        <div>
+            {% for type in pokemon.types.all %}
+                <span class="pokemon-type {{ type.name }}">{{ type.name }}</span>
+            {% endfor %}
+        </div>
+
+        <h2>Abilities</h2>
+        <div class="flex-col-center">
+            {% for ability in pokemon.abilities.all %}
+                <span>{{ ability.name | capfirst }}</span>
+            {% endfor %}
+        </div>
+
+        <h2>Stats</h2>
+        <div class="mb-4">
+            {% for stat in pokemon.stat_set.all %}
+                {{ stat.name }}: <b>{{ stat.base_stat }}</b>
+            {% endfor %}
+        </div>
+
+        <a class="mb-2" href="{% url 'pokedex:index' %}">home</a>
+        <a class="mb-2" href="{% url 'pokedex:pokemon-edit' pokemon.pk %}">edit</a>
+        <form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="delete">
+        </form>
+    </div>
 {% endblock %}
