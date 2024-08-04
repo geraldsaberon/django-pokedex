@@ -1,24 +1,32 @@
-<h1>{{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
-<img src="{{ pokemon.sprite_slug }}">
-<p>
-{% for type in pokemon.types.all %}
-    {{ type.name | upper }}
-{% endfor %}
-</p>
-<p>
-Abilities:
-{% for ability in pokemon.abilities.all %}
-    {{ ability.name }}
-{% endfor %}
-</p>
-<p>
-Stats:
-{% for stat in pokemon.stat_set.all %}
-    {{ stat.name }}: {{ stat.base_stat }}
-{% endfor %}
-</p>
-<a href="{% url 'pokedex:pokemon-edit' pokemon.pk %}">edit</a>
-<form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="delete">
+{% extends "pokedex/base.html" %}
+
+{% block title %}
+    {{ pokemon.name | capfirst }} Details | Pokedex
+{% endblock%}
+
+{% block content %}
+    <h1>{{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
+    <img src="{{ pokemon.sprite_slug }}">
+    <p>
+    {% for type in pokemon.types.all %}
+        {{ type.name | upper }}
+    {% endfor %}
+    </p>
+    <p>
+    Abilities:
+    {% for ability in pokemon.abilities.all %}
+        {{ ability.name }}
+    {% endfor %}
+    </p>
+    <p>
+    Stats:
+    {% for stat in pokemon.stat_set.all %}
+        {{ stat.name }}: {{ stat.base_stat }}
+    {% endfor %}
+    </p>
+    <a href="{% url 'pokedex:pokemon-edit' pokemon.pk %}">edit</a>
+    <form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="delete">
 </form>
+{% endblock %}

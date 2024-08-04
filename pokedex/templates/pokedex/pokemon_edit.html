@@ -1,13 +1,21 @@
-<h1>Edit: {{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
-<img src="{{ pokemon.sprite_slug }}">
-<form action="{% url 'pokedex:pokemon-edit' pokemon.pk %}" method="post">
-    {% csrf_token %}
-    {{ form.errors }}
-    {% for field in form %}
-        <div>
-            {{ field.label_tag }}
-            {{ field }}
-        </div>
-    {% endfor %}
-    <input type="submit" value="Submit">
-</form>
+{% extends "pokedex/base.html" %}
+
+{% block title %}
+    Edit {{ pokemon.name | capfirst }} | Pokedex
+{% endblock %}
+
+{% block content %}
+    <h1>Edit: {{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
+    <img src="{{ pokemon.sprite_slug }}">
+    <form action="{% url 'pokedex:pokemon-edit' pokemon.pk %}" method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        {% for field in form %}
+            <div>
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
