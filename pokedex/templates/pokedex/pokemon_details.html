@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="flex-col-center">
-        <h1>{{ pokemon.pokeNumberId }} {{ pokemon.name | capfirst }}</h1>
+        <h1>[{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
 
         <img src="{{ pokemon.sprite_slug }}">
 
