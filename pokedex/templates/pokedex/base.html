@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'pokedex/css/style.css' %}">
 </head>
 <body>
+    {% include 'pokedex/navbar.html' %}
     <div id="content">
         {% block content %}{% endblock %}
     </div>

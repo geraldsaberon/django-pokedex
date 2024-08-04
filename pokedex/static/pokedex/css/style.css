@@ -125,3 +125,14 @@ body {
 .dragon {
     background: #5060e1;
 }
+
+
+/* navbar */
+#navbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-link {
+    color: inherit;
+}
