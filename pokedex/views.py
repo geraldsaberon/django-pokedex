@@ -1,7 +1,5 @@
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.views import View, generic
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from pokedex.forms import PokemonEditForm
 from pokedex.models import Pokemon, Stat
@@ -65,7 +63,7 @@ class PokemonEditView(View):
 
             pokemon.save()
 
-            return HttpResponseRedirect(reverse("pokedex:pokemon-detail", args=[pokemon.pk]))
+            return redirect("pokedex:pokemon-detail", pk=pokemon.pk)
         else:
             return render(request, self.template_name, {"pokemon": pokemon, "form": form})
 
@@ -109,7 +107,7 @@ class PokemonCreateView(View):
 
             pokemon.save()
 
-            return HttpResponseRedirect(reverse("pokedex:pokemon-detail", args=[pokemon.pk]))
+            return redirect("pokedex:pokemon-detail", pk=pokemon.pk)
         else:
             return render(request, self.template_name, {"form": form})
 
@@ -117,4 +115,4 @@ class PokemonDeleteView(View):
     def post(self, request, pk):
         pokemon = get_object_or_404(Pokemon, pk=pk)
         pokemon.delete()
-        return HttpResponseRedirect(reverse("pokedex:index"))
+        return redirect("pokedex:index")
