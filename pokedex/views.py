@@ -126,28 +126,7 @@ class PokemonCreateView(View):
                 form.add_error("name", f"{name} already exists. Pokemon name must be unique")
                 return render(request, self.template_name, {"form": form})
 
-            pokemon = Pokemon(name=name)
-            pokemon.save()
-
-            pokemon.types.set([
-                form.cleaned_data.get("type1"),
-                form.cleaned_data.get("type2")
-            ])
-
-            pokemon.abilities.set([
-                form.cleaned_data.get("ability1"),
-                form.cleaned_data.get("ability2"),
-                form.cleaned_data.get("ability3")
-            ])
-
-            Stat(pokemon=pokemon, name="hp", base_stat=form.cleaned_data.get("hp")).save()
-            Stat(pokemon=pokemon, name="attack", base_stat=form.cleaned_data.get("attack")).save()
-            Stat(pokemon=pokemon, name="defense", base_stat=form.cleaned_data.get("defense")).save()
-            Stat(pokemon=pokemon, name="special-attack", base_stat=form.cleaned_data.get("special_attack")).save()
-            Stat(pokemon=pokemon, name="special-defense", base_stat=form.cleaned_data.get("special_defense")).save()
-            Stat(pokemon=pokemon, name="speed", base_stat=form.cleaned_data.get("speed")).save()
-
-            pokemon.save()
+            pokemon = create_pokemon(**form.cleaned_data)
 
             return redirect("pokedex:pokemon-detail", pk=pokemon.pk)
         else:
