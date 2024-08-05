@@ -1,6 +1,8 @@
 from django.http import HttpRequest, HttpResponse
 from django.views import View, generic
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import login, views as auth_views
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 
 from pokedex.forms import PokemonEditForm
@@ -15,8 +17,23 @@ class LogoutView(auth_views.LogoutView):
     next_page = "/"
 
 class RegisterView(View):
-    def get(self, request):
-        return HttpResponse("Register view")
+    template_name = "pokedex/register.html"
+    form_class = UserCreationForm
+
+    def get(self, request: HttpRequest):
+        form = self.form_class()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request: HttpRequest):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                form.cleaned_data["username"],
+                password=form.cleaned_data["password1"])
+            login(request, user)
+            return redirect("pokedex:index")
+        else:
+            return render(request, self.template_name, {"form": form})
 
 class IndexView(generic.ListView):
     template_name = "pokedex/index.html"

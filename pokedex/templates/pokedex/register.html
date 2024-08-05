@@ -1,0 +1,22 @@
+{% extends "pokedex/base.html" %}
+
+{% block title %}
+    Register | Pokedex
+{% endblock %}
+
+{% block content %}
+    <div class="flex-col-center">
+        <h1>Register</h1>
+        <form action="{% url 'pokedex:register' %}" method="post">
+            {% csrf_token %}
+            {{ form.errors }}
+            {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <input class="mt-4" type="submit" value="Submit">
+        </form>
+    </div>
+{% endblock %}
