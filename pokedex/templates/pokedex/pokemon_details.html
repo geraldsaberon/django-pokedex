@@ -30,7 +30,7 @@
 
         <h2>Stats</h2>
         <div class="mb-4">
-            {% for stat in pokemon.stat_set.all %}
+            {% for stat in pokemon.stats.all %}
                 {{ stat.name }}: <b>{{ stat.base_stat }}</b>
             {% endfor %}
         </div>

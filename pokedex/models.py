@@ -30,7 +30,7 @@ class Pokemon(models.Model):
         return "custom"
 
 class Stat(models.Model):
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(Pokemon, related_name="stats", on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     base_stat = models.SmallIntegerField()
     def __str__(self):

@@ -66,6 +66,6 @@ class Command(BaseCommand):
                     except IntegrityError: # type already exists in db
                         p.types.add(PokemonType.objects.get(name=type_))
                 for stat_name, base_stat in stats:
-                    p.stat_set.create(name=stat_name, base_stat=base_stat)
+                    p.stats.create(name=stat_name, base_stat=base_stat)
 
                 p.save()

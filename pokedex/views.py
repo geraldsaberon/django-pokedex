@@ -58,7 +58,7 @@ class PokemonEditView(View):
             initial_form_data[f"type{i+1}"] = type_.pk
         for i, ability in enumerate(pokemon.abilities.all()):
             initial_form_data[f"ability{i+1}"] = ability.pk
-        for stat in pokemon.stat_set.all():
+        for stat in pokemon.stats.all():
             initial_form_data[stat.name.replace("-", "_")] = stat.base_stat
 
         form = self.form_class(initial_form_data)
@@ -95,7 +95,7 @@ class PokemonEditView(View):
                 form.cleaned_data.get("ability3")
             ])
             for stat in ["hp", "attack", "defense", "special-attack", "special-defense", "speed"]:
-                s: Stat = pokemon.stat_set.get(name=stat)
+                s: Stat = pokemon.stats.get(name=stat)
                 s.base_stat = form.cleaned_data[stat.replace("-", "_")]
                 s.save()
 
