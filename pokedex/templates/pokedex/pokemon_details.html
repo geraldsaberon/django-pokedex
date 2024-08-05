@@ -35,7 +35,7 @@
         <a class="mb-2" href="{% url 'pokedex:pokemon-edit' pokemon.pk %}">edit</a>
         <form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="delete">
+            <input class="plain-btn" type="submit" value="delete">
         </form>
     </div>
 {% endblock %}
