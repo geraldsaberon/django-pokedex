@@ -1,8 +1,13 @@
-from django.urls import path
+from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework import routers
 
 from . import views
+
+
+router = routers.DefaultRouter()
+router.register("pokemons", views.PokemonsViewSet)
 
 app_name = "pokedex"
 urlpatterns = [
@@ -14,4 +19,7 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("register/", views.RegisterView.as_view(), name="register"),
+
+    # REST API
+    path("api/", include((router.urls, "pokedex")))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

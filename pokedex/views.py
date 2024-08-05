@@ -4,9 +4,12 @@ from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
+from rest_framework import viewsets
 
 from pokedex.forms import PokemonEditForm
 from pokedex.models import Pokemon, Stat
+from pokedex.serializers import PokemonSerializer
+from pokedex.utils import create_pokemon
 
 # Create your views here.
 class LoginView(auth_views.LoginView):
@@ -140,3 +143,9 @@ class PokemonDeleteView(View):
         pokemon.is_deleted = True
         pokemon.save()
         return redirect("pokedex:index")
+
+
+# Djano REST Framework
+class PokemonsViewSet(viewsets.ModelViewSet):
+    queryset = Pokemon.objects.filter(is_deleted=False)
+    serializer_class = PokemonSerializer
