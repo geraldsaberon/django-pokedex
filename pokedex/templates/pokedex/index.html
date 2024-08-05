@@ -10,7 +10,7 @@
         {% for pokemon in pokemons %}
                 <div class="pokemon-box">
                     <a href="{% url 'pokedex:pokemon-detail' pokemon.pk %}">
-                        [{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}
+                        [{{ pokemon.nationalPokedexNum }}] {{ pokemon.name | capfirst }}
                         {% if pokemon.sprite_slug %}
                             <img src="{{ pokemon.sprite_slug }}">
                         {% else %}

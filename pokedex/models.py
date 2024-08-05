@@ -14,7 +14,7 @@ class Ability(models.Model):
         verbose_name_plural = "Abilities"
 
 class Pokemon(models.Model):
-    pokemon_number = models.SmallIntegerField(unique=True, blank=True, null=True)
+    national_pokedex_number = models.SmallIntegerField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=100, unique=True)
     sprite = models.URLField()
     sprite_slug = models.CharField(max_length=100)
@@ -24,9 +24,9 @@ class Pokemon(models.Model):
     def __str__(self):
         return self.name
     @property
-    def pokeNumberId(self):
-        if self.pokemon_number:
-            return str(self.pokemon_number).zfill(4)
+    def nationalPokedexNum(self):
+        if self.national_pokedex_number:
+            return str(self.national_pokedex_number).zfill(4)
         return "custom"
 
 class Stat(models.Model):

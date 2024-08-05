@@ -6,8 +6,7 @@
 
 {% block content %}
     <div class="flex-col-center">
-        <h1>[{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
-
+        <h1>[{{ pokemon.nationalPokedexNum }}] {{ pokemon.name | capfirst }}</h1>
         {% if pokemon.sprite_slug %}
             <img src="{{ pokemon.sprite_slug }}">
         {% else %}

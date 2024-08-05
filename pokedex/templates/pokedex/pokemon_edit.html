@@ -7,7 +7,7 @@
 {% block content %}
     <div class="flex-col-center">
         {% if pokemon %}
-            <h1>Edit: [{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
+            <h1>Edit: [{{ pokemon.nationalPokedexNum }}] {{ pokemon.name | capfirst }}</h1>
         {% else %}
             <h1>Edit Pokemon</h1>
         {% endif %}
