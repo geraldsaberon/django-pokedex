@@ -26,7 +26,7 @@ class IndexView(generic.ListView):
         return Pokemon.objects.filter(is_deleted=False)
 
 class PokemonView(generic.DetailView):
-    model = Pokemon
+    queryset = Pokemon.objects.filter(is_deleted=False)
     template_name = "pokedex/pokemon_details.html"
 
 class PokemonEditView(View):
