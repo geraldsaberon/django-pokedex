@@ -7,11 +7,17 @@
 {% block content %}
     <div class="flex-col-center">
         <h1>Create a Pokemon!</h1>
-        <form action="{% url 'pokedex:pokemon-create' %}" method="post" >
-        {% csrf_token %}
-        {{ form }}
-        <input class="mt-4" type="submit" value="Create!">
-        <a href="{% url 'pokedex:index' %}">Cancel</a>
-        </form>
+        {% if user.is_anonymous %}
+            <div>
+                <a href="{% url 'pokedex:login' %}?next={{ request.path }}">Login</a> to create a Pokemon!
+            </div>
+        {% elif user.is_authenticated %}
+            <form action="{% url 'pokedex:pokemon-create' %}" method="post" >
+                {% csrf_token %}
+                {{ form }}
+                <input class="mt-4" type="submit" value="Create!">
+                <a href="{% url 'pokedex:index' %}">Cancel</a>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}

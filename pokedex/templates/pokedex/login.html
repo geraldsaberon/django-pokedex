@@ -1,0 +1,16 @@
+{% extends "pokedex/base.html" %}
+
+{% block title %}
+    Login | Pokedex
+{% endblock %}
+
+{% block content %}
+    <div class="flex-col-center">
+        <h1>Login to Pokedex!</h1>
+        <form action="" method="post" >
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Log in!" >
+        </form>
+    </div>
+{% endblock %}

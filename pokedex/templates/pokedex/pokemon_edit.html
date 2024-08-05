@@ -8,17 +8,23 @@
     <div class="flex-col-center">
         <h1>Edit: [{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
         <img src="{{ pokemon.sprite_slug }}">
-        <form action="{% url 'pokedex:pokemon-edit' pokemon.pk %}" method="post">
-            {% csrf_token %}
-            {{ form.errors }}
-            {% for field in form %}
-                <div>
-                    {{ field.label_tag }}
-                    {{ field }}
-                </div>
-            {% endfor %}
-            <input class="mt-4" type="submit" value="Submit">
-            <a href="{% url 'pokedex:pokemon-detail' pokemon.pk %}">Cancel</a>
-        </form>
+        {% if user.is_anonymous %}
+            <div>
+                <a href="{% url 'pokedex:login' %}?next={{ request.path }}">Login</a> to edit Pokemon!
+            </div>
+        {% elif user.is_authenticated %}
+            <form action="{% url 'pokedex:pokemon-edit' pokemon.pk %}" method="post">
+                {% csrf_token %}
+                {{ form.errors }}
+                {% for field in form %}
+                    <div>
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <input class="mt-4" type="submit" value="Submit">
+                <a href="{% url 'pokedex:pokemon-detail' pokemon.pk %}">Cancel</a>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}

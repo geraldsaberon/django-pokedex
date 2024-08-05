@@ -1,14 +1,18 @@
 from django.http import HttpResponse
 from django.views import View, generic
+from django.contrib.auth import views as auth_views
 from django.shortcuts import get_object_or_404, redirect, render
 
 from pokedex.forms import PokemonEditForm
 from pokedex.models import Pokemon, Stat
 
 # Create your views here.
-class LoginView(View):
-    def get(self, request):
-        return HttpResponse("Login view")
+class LoginView(auth_views.LoginView):
+    template_name = "pokedex/login.html"
+    next_page = "/"
+
+class LogoutView(auth_views.LogoutView):
+    next_page = "/"
 
 class RegisterView(View):
     def get(self, request):

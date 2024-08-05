@@ -12,5 +12,6 @@ urlpatterns = [
     path("<int:pk>/delete/", views.PokemonDeleteView.as_view(), name="pokemon-delete"),
     path("create/", views.PokemonCreateView.as_view(), name="pokemon-create"),
     path("login/", views.LoginView.as_view(), name="login"),
+    path("logout/", views.LogoutView.as_view(), name="logout"),
     path("register/", views.RegisterView.as_view(), name="register"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

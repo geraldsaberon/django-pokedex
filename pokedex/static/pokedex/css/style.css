@@ -136,3 +136,16 @@ body {
 .nav-link {
     color: inherit;
 }
+
+#navbar form {
+    display: inline;
+}
+
+.plain-btn {
+    background: none;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
