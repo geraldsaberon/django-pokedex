@@ -7,6 +7,7 @@ body {
 .mt-4 { margin-top: 1.0rem; }
 .mb-2 { margin-bottom: 0.5rem; }
 .mb-4 { margin-bottom: 1.0rem; }
+.outline {outline: 1px solid gray;}
 .flex-col-center {
     display: flex;
     flex-direction: column;

@@ -8,7 +8,11 @@
     <div class="flex-col-center">
         <h1>[{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
 
-        <img src="{{ pokemon.sprite_slug }}">
+        {% if pokemon.sprite_slug %}
+            <img src="{{ pokemon.sprite_slug }}">
+        {% else %}
+            <div class="no-sprite outline">[no pic.]</div>
+        {% endif %}
 
         <h2>Type</h2>
         <div>
