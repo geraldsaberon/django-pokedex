@@ -6,10 +6,17 @@
 
 {% block content %}
     <div class="flex-col-center">
-        <h1>Edit: [{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
+        {% if pokemon %}
+            <h1>Edit: [{{ pokemon.pokeNumberId }}] {{ pokemon.name | capfirst }}</h1>
+        {% else %}
+            <h1>Edit Pokemon</h1>
+        {% endif %}
         <img src="{{ pokemon.sprite_slug }}">
         {% if user.is_anonymous %}
             <div>
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
                 <a href="{% url 'pokedex:login' %}?next={{ request.path }}">Login</a> to edit Pokemon!
             </div>
         {% elif user.is_authenticated %}

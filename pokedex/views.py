@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.views import View, generic
 from django.contrib.auth import views as auth_views
 from django.shortcuts import get_object_or_404, redirect, render
@@ -48,8 +48,16 @@ class PokemonEditView(View):
 
         return render(request, self.template_name, {"pokemon": pokemon, "form": form})
 
-    def post(self, request, pk):
+    def post(self, request: HttpRequest, pk):
         pokemon = get_object_or_404(Pokemon, pk=pk)
+        context = {
+            "pokemon": pokemon,
+            "message": "You need to login before editing a Pokemon."
+        }
+
+        if not request.user.is_authenticated:
+            return render(request, self.template_name, context)
+
         form = self.form_class(request.POST)
         if form.is_valid():
             print(f"|| {form.cleaned_data=}")
@@ -88,8 +96,12 @@ class PokemonCreateView(View):
         form = self.form_class()
         return render(request, self.template_name, {"form": form})
 
-    def post(self, request):
+    def post(self, request: HttpRequest):
         form = self.form_class(request.POST)
+
+        if not request.user.is_authenticated:
+            return render(request, self.template_name, {"message": "You need to login before creating a Pokemon."}) 
+
         if form.is_valid():
             name = form.cleaned_data.get("name")
 
@@ -125,7 +137,9 @@ class PokemonCreateView(View):
             return render(request, self.template_name, {"form": form})
 
 class PokemonDeleteView(View):
-    def post(self, request, pk):
+    def post(self, request: HttpRequest, pk):
+        if not request.user.is_authenticated:
+            return redirect("pokedex:login")
         pokemon = get_object_or_404(Pokemon, pk=pk)
         pokemon.is_deleted = True
         pokemon.save()

@@ -9,6 +9,9 @@
         <h1>Create a Pokemon!</h1>
         {% if user.is_anonymous %}
             <div>
+                {% if message %}
+                    <p>{{ message }}</p>
+                {% endif %}
                 <a href="{% url 'pokedex:login' %}?next={{ request.path }}">Login</a> to create a Pokemon!
             </div>
         {% elif user.is_authenticated %}
