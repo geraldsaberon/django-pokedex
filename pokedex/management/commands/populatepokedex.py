@@ -49,7 +49,7 @@ class Command(BaseCommand):
                         copyfileobj(image_res.raw, f)
 
                 p = Pokemon(
-                    pokemon_number=pokemon_id,
+                    national_pokedex_number=pokemon_id,
                     name=name,
                     sprite=sprite_file,
                     sprite_slug=sprite_slug)
