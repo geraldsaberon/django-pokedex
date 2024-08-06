@@ -52,7 +52,7 @@
             {% elif user.is_authenticated %}
                 <form action="{% url 'pokedex:pokemon-delete' pokemon.pk %}" method="post">
                     {% csrf_token %}
-                    <input class="plain-btn" type="submit" value="delete">
+                    <input class="plain-btn" type="submit" value="delete" onclick="return confirm('Confirm deletion: {{ pokemon.name | capfirst }}')">
                 </form>
             {% endif %}
         </div>
