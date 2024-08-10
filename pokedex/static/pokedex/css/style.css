@@ -29,15 +29,18 @@ body {
     align-items: center;
     width: 100%;
     height: 156px;
-    outline: 1px solid seagreen;
+    outline: 2px solid lightgreen;
+    border-radius: 4% 20%;
+    transition: 200ms all;
+}
+
+.pokemon-box:hover {
+    background: lightgreen;
+    outline: 8px solid lightgreen;
 }
 
 .pokemon-box a {
     overflow-wrap: anywhere;
-}
-
-.pokemon-box:hover {
-    background: #f1f1f1;
 }
 
 .no-sprite {
