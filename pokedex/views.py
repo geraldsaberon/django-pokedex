@@ -4,6 +4,8 @@ from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 
 from pokedex.forms import PokemonEditForm
@@ -69,6 +71,7 @@ class PokemonEditView(View):
     template_name = "pokedex/pokemon_edit.html"
     form_class = PokemonEditForm
 
+    @method_decorator(never_cache)
     def get(self, request, pk):
         pokemon = get_object_or_404(Pokemon, pk=pk)
 
@@ -128,6 +131,7 @@ class PokemonCreateView(View):
     template_name = "pokedex/pokemon_create.html"
     form_class = PokemonEditForm
 
+    @method_decorator(never_cache)
     def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {"form": form})
