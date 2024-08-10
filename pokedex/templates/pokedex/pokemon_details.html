@@ -6,7 +6,8 @@
 
 {% block content %}
     <div class="flex-col-center">
-        <h1>[{{ pokemon.nationalPokedexNum }}] {{ pokemon.name | capfirst }}</h1>
+        <span>[{{ pokemon.nationalPokedexNum }}]</span>
+        <h1>{{ pokemon.name | capfirst }}</h1>
         {% if pokemon.sprite_slug %}
             <img src="{{ pokemon.sprite_slug }}">
         {% else %}
@@ -34,8 +35,6 @@
             {% endfor %}
         </div>
 
-        <a class="mb-2" href="{% url 'pokedex:index' %}">home</a>
-
         <div>
             {% if user.is_anonymous %}
                 <a class="mb-2" href="#">edit</a>
@@ -56,5 +55,18 @@
                 </form>
             {% endif %}
         </div>
+
+        <div class="mt-4">
+            <div>
+                {% if prev_pokemon %}
+                    <a href="{% url 'pokedex:pokemon-detail' prev_pokemon.pk %}"><< {{ prev_pokemon }}</a>
+                {% endif %}
+                {% if next_pokemon %}
+                    <a href="{% url 'pokedex:pokemon-detail' next_pokemon.pk %}">{{ next_pokemon }} >></a>
+                {% endif %}
+            </div>
+        </div>
+
+        <a class="mt-4" href="{% url 'pokedex:index' %}">home</a>
     </div>
 {% endblock %}

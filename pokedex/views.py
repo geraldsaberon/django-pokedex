@@ -45,9 +45,25 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Pokemon.objects.filter(is_deleted=False)
 
-class PokemonView(generic.DetailView):
+class PokemonView(View):
     queryset = Pokemon.objects.filter(is_deleted=False)
     template_name = "pokedex/pokemon_details.html"
+
+    def get(self, request, pk):
+        pokemon = self.queryset.get(pk=pk)
+
+        prev_pokemon = self.queryset.filter(pk=pk-1)
+        prev_pokemon = prev_pokemon.first() if prev_pokemon.exists() else None
+        next_pokemon = self.queryset.filter(pk=pk+1)
+        next_pokemon = next_pokemon.first() if next_pokemon.exists() else None
+
+        context = {
+            "pokemon": pokemon,
+            "prev_pokemon": prev_pokemon,
+            "next_pokemon": next_pokemon
+        }
+
+        return render(request, self.template_name, context)
 
 class PokemonEditView(View):
     template_name = "pokedex/pokemon_edit.html"
