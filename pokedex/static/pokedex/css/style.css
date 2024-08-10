@@ -1,5 +1,10 @@
+:root {
+    --pokemon-box-size: 180px;
+}
+
 body {
     font-family: monospace;
+    padding: 0 4rem;
 }
 
 /*  */
@@ -17,7 +22,7 @@ body {
 /* index page */
 .pokemon-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--pokemon-box-size), 1fr));
     grid-gap: 12px;
     text-align: center;
 }
@@ -28,7 +33,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 156px;
+    height: var(--pokemon-box-size);
     outline: 2px solid lightgreen;
     border-radius: 4% 20%;
     transition: 200ms all;
@@ -41,6 +46,12 @@ body {
 
 .pokemon-box a {
     overflow-wrap: anywhere;
+    color: #444;
+    text-decoration: none;
+}
+
+.pokemon-name {
+    font-weight: bold;
 }
 
 .no-sprite {
