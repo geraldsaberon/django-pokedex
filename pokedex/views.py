@@ -17,6 +17,7 @@ from pokedex.utils import create_pokemon
 class LoginView(auth_views.LoginView):
     template_name = "pokedex/login.html"
     next_page = "/"
+    redirect_authenticated_user = True
 
 class LogoutView(auth_views.LogoutView):
     next_page = "/"
@@ -26,6 +27,8 @@ class RegisterView(View):
     form_class = UserCreationForm
 
     def get(self, request: HttpRequest):
+        if request.user.is_authenticated:
+            return redirect("/")
         form = self.form_class()
         return render(request, self.template_name, {"form": form})
 
