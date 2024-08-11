@@ -3,9 +3,9 @@
         <option value="all">All</option>
         {% for type in types %}
             {% if type.name == request.GET.type %}
-                <option selected value="{{ type.name }}">{{ type.name }}</option>
+                <option class="{{ type.name }}" selected value="{{ type.name }}">{{ type.name }}</option>
             {% else %}
-                <option value="{{ type.name }}">{{ type.name }}</option>
+                <option class="{{ type.name }}" value="{{ type.name }}">{{ type.name }}</option>
             {% endif %}
         {% endfor %}
     </select>
