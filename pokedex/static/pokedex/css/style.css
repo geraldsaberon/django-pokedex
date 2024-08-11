@@ -5,6 +5,9 @@
 body {
     font-family: monospace;
     padding: 0 4rem;
+    min-height: 95vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /*  */
@@ -165,4 +168,12 @@ body {
     font-family: inherit;
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* footer */
+footer {
+    height: 8rem;
+    justify-content: center;
+    color: gray;
+    margin-top: auto;
 }
