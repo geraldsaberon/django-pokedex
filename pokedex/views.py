@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 
 from pokedex.forms import PokemonEditForm
-from pokedex.models import Pokemon
+from pokedex.models import Pokemon, PokemonType
 from pokedex.serializers import PokemonSerializer
 from pokedex.utils import create_pokemon, update_pokemon
 
@@ -43,12 +43,21 @@ class RegisterView(View):
         else:
             return render(request, self.template_name, {"form": form})
 
-class IndexView(generic.ListView):
+class IndexView(View):
     template_name = "pokedex/index.html"
-    context_object_name = "pokemons"
+    queryset = Pokemon.objects.filter(is_deleted=False)
 
-    def get_queryset(self):
-        return Pokemon.objects.filter(is_deleted=False)
+    def get(self, request: HttpRequest):
+        pokemon_type = request.GET.get("type")
+        if pokemon_type == "all" or pokemon_type is None:
+            pokemons = self.queryset
+        else:
+            pokemons = self.queryset.filter(types__name=pokemon_type)
+        context = {
+            "pokemons": pokemons,
+            "types": PokemonType.objects.order_by("name")
+        }
+        return render(request, self.template_name, context)
 
 class PokemonView(View):
     queryset = Pokemon.objects.filter(is_deleted=False)

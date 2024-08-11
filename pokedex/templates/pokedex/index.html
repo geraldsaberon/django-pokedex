@@ -6,6 +6,9 @@
 
 {% block content %}
     {% if pokemons %}
+        <div class="mb-4">
+            {% include 'pokedex/pokemon_type_filter.html' %}
+        </div>
         <div class="pokemon-grid">
         {% for pokemon in pokemons %}
                 <div class="pokemon-box">

@@ -1,0 +1,12 @@
+<form action="{% url 'pokedex:index' %}" method="get">
+    <select name="type" onchange="this.form.submit()">
+        <option value="all">All</option>
+        {% for type in types %}
+            {% if type.name == request.GET.type %}
+                <option selected value="{{ type.name }}">{{ type.name }}</option>
+            {% else %}
+                <option value="{{ type.name }}">{{ type.name }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</form>
