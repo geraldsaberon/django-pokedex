@@ -18,7 +18,7 @@ class Pokemon(models.Model):
     name = models.CharField(max_length=100, unique=True)
     sprite = models.URLField()
     sprite_slug = models.CharField(max_length=100)
-    types = models.ManyToManyField(PokemonType)
+    types = models.ManyToManyField(PokemonType, through="PokemonHasType")
     abilities = models.ManyToManyField(Ability)
     is_deleted = models.BooleanField(default=False)
     def __str__(self):
@@ -28,6 +28,13 @@ class Pokemon(models.Model):
         if self.national_pokedex_number:
             return str(self.national_pokedex_number).zfill(4)
         return "custom"
+
+class PokemonHasType(models.Model):
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    pokemon_type = models.ForeignKey(PokemonType, on_delete=models.CASCADE)
+    slot = models.SmallIntegerField()
+    def __str__(self):
+        return f"slot {self.slot} {self.pokemon_type.name}"
 
 class Stat(models.Model):
     pokemon = models.ForeignKey(Pokemon, related_name="stats", on_delete=models.CASCADE)

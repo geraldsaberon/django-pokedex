@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 import requests
 
-from ...models import Ability, Pokemon, PokemonType
+from ...models import Ability, Pokemon, PokemonHasType, PokemonType
 
 
 class Command(BaseCommand):
@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 sprite = res_json["sprites"]["front_default"]
                 sprite_slug = f"/static/pokemon-sprites/{os.path.split(sprite)[1]}"
                 abilities = [row["ability"]["name"] for row in res_json["abilities"]]
-                types = [row["type"]["name"] for row in res_json["types"]]
+                types = [{"name": row["type"]["name"], "slot": row["slot"]} for row in res_json["types"]]
                 stats = [(row["stat"]["name"], row["base_stat"]) for row in res_json["stats"]]
 
                 print(f"|| {str(pokemon_id).zfill(4)} {name} ")
@@ -61,10 +61,16 @@ class Command(BaseCommand):
                     except IntegrityError: # ability already exists in db
                         p.abilities.add(Ability.objects.get(name=ability))
                 for type_ in types:
-                    try:
-                        p.types.create(name=type_)
-                    except IntegrityError: # type already exists in db
-                        p.types.add(PokemonType.objects.get(name=type_))
+                    if not PokemonType.objects.filter(name=type_["name"]).exists():
+                        t = PokemonType(name=type_["name"])
+                        t.save()
+
+                    pt = PokemonHasType(
+                        pokemon=p,
+                        pokemon_type=PokemonType.objects.get(name=type_["name"]),
+                        slot=type_["slot"]
+                    )
+                    pt.save()
                 for stat_name, base_stat in stats:
                     p.stats.create(name=stat_name, base_stat=base_stat)
 

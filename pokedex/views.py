@@ -9,9 +9,9 @@ from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 
 from pokedex.forms import PokemonEditForm
-from pokedex.models import Pokemon, Stat
+from pokedex.models import Pokemon
 from pokedex.serializers import PokemonSerializer
-from pokedex.utils import create_pokemon
+from pokedex.utils import create_pokemon, update_pokemon
 
 # Create your views here.
 class LoginView(auth_views.LoginView):
@@ -102,29 +102,13 @@ class PokemonEditView(View):
 
         form = self.form_class(request.POST)
         if form.is_valid():
-            print(f"|| {form.cleaned_data=}")
             name = form.cleaned_data.get("name")
 
             if Pokemon.objects.filter(name=name).exists() and pokemon.name != name:
                 form.add_error("name", f"{name} already exists. Pokemon name must be unique")
                 return render(request, self.template_name, {"pokemon": pokemon, "form": form})
 
-            pokemon.name = name
-            pokemon.types.set([
-                form.cleaned_data.get("type1"),
-                form.cleaned_data.get("type2")
-            ])
-            pokemon.abilities.set([
-                form.cleaned_data.get("ability1"),
-                form.cleaned_data.get("ability2"),
-                form.cleaned_data.get("ability3")
-            ])
-            for stat in ["hp", "attack", "defense", "special-attack", "special-defense", "speed"]:
-                s: Stat = pokemon.stats.get(name=stat)
-                s.base_stat = form.cleaned_data[stat.replace("-", "_")]
-                s.save()
-
-            pokemon.save()
+            pokemon = update_pokemon(pokemon, **form.cleaned_data)
 
             return redirect("pokedex:pokemon-detail", pk=pokemon.pk)
         else:
