@@ -14,10 +14,12 @@
         <img src="{{ pokemon.sprite_slug }}">
         {% if user.is_anonymous %}
             <div>
-                {% if message %}
-                    <p>{{ message }}</p>
-                {% endif %}
+                <p>You need to login before editing a Pokemon.</p>
                 <a href="{% url 'pokedex:login' %}?next={{ request.path }}">Login</a> to edit Pokemon!
+            </div>
+        {% elif not perms.pokedex.change_pokemon %}
+            <div>
+                <p>You do not have the appropriate permission to edit pokemon</p>
             </div>
         {% elif user.is_authenticated %}
             <form action="{% url 'pokedex:pokemon-edit' pokemon.pk %}" method="post">

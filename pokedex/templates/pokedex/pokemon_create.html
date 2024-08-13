@@ -9,10 +9,12 @@
         <h1>Create a Pokemon!</h1>
         {% if user.is_anonymous %}
             <div>
-                {% if message %}
-                    <p>{{ message }}</p>
-                {% endif %}
+                <p>You need to login before creating a Pokemon.</p>
                 <a href="{% url 'pokedex:login' %}?next={{ request.path }}">Login</a> to create a Pokemon!
+            </div>
+        {% elif not perms.pokedex.add_pokemon %}
+            <div>
+                <p>You do not have the appropriate permission to create a pokemon.</p>
             </div>
         {% elif user.is_authenticated %}
             <form action="{% url 'pokedex:pokemon-create' %}" method="post" >

@@ -1,4 +1,5 @@
 from django.http import HttpRequest, HttpResponse
+from django.urls import reverse
 from django.views import View, generic
 from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.forms import UserCreationForm
@@ -107,13 +108,12 @@ class PokemonEditView(View):
 
     def post(self, request: HttpRequest, pk):
         pokemon = get_object_or_404(Pokemon, pk=pk)
-        context = {
-            "pokemon": pokemon,
-            "message": "You need to login before editing a Pokemon."
-        }
 
         if not request.user.is_authenticated:
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, {"pokemon": pokemon})
+
+        if not request.user.has_perm("pokedex.change_pokemon"):
+            return render(request, self.template_name, status=403)
 
         form = self.form_class(request.POST)
         if form.is_valid():
@@ -142,7 +142,10 @@ class PokemonCreateView(View):
         form = self.form_class(request.POST)
 
         if not request.user.is_authenticated:
-            return render(request, self.template_name, {"message": "You need to login before creating a Pokemon."}) 
+            return render(request, self.template_name)
+
+        if not request.user.has_perm("pokedex.add_pokemon"):
+            return render(request, self.template_name, status=403)
 
         if form.is_valid():
             name = form.cleaned_data.get("name")
@@ -159,6 +162,9 @@ class PokemonCreateView(View):
 
 class PokemonDeleteView(View):
     def post(self, request: HttpRequest, pk):
+        if not request.user.has_perm("pokedex.delete_pokemon"):
+            return redirect(reverse("pokedex:pokemon-detail", args=[pk]))
+
         if not request.user.is_authenticated:
             return redirect("pokedex:login")
         pokemon = get_object_or_404(Pokemon, pk=pk)
