@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.views import View, generic
 from django.contrib.auth import login, views as auth_views
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission, User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
@@ -38,6 +38,12 @@ class RegisterView(View):
             user = User.objects.create_user(
                 form.cleaned_data["username"],
                 password=form.cleaned_data["password1"])
+            user.user_permissions.set([
+                Permission.objects.get(codename="add_pokemon"),
+                Permission.objects.get(codename="view_pokemon"),
+                Permission.objects.get(codename="change_pokemon"),
+                Permission.objects.get(codename="delete_pokemon"),
+            ])
             login(request, user)
             return redirect("pokedex:index")
         else:
