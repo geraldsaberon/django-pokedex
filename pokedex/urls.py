@@ -7,7 +7,7 @@ from . import views
 
 
 router = routers.DefaultRouter()
-router.register("pokemons", views.PokemonsViewSet)
+router.register("pokemons", views.PokemonsViewSet, basename="api-pokemon")
 
 app_name = "pokedex"
 urlpatterns = [
@@ -21,5 +21,5 @@ urlpatterns = [
     path("register/", views.RegisterView.as_view(), name="register"),
 
     # REST API
-    path("api/", include((router.urls, "pokedex")))
+    path("api/", include(router.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

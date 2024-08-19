@@ -52,14 +52,12 @@ class RegisterView(View):
 
 class IndexView(View):
     template_name = "pokedex/index.html"
-    queryset = Pokemon.objects.filter(is_deleted=False)
 
     def get(self, request: HttpRequest):
         pokemon_type = request.GET.get("type")
-        if pokemon_type == "all" or pokemon_type is None:
-            pokemons = self.queryset
-        else:
-            pokemons = self.queryset.filter(types__name=pokemon_type)
+        pokemons = Pokemon.objects.filter(is_deleted=False)
+        if pokemon_type != "all" and pokemon_type != None:
+            pokemons = pokemons.filter(types__name=pokemon_type)
         context = {
             "pokemons": pokemons,
             "types": PokemonType.objects.order_by("name")
@@ -177,3 +175,7 @@ class PokemonDeleteView(View):
 class PokemonsViewSet(viewsets.ModelViewSet):
     queryset = Pokemon.objects.filter(is_deleted=False)
     serializer_class = PokemonSerializer
+
+    def perform_destroy(self, instance: Pokemon):
+        instance.is_deleted = True
+        instance.save()

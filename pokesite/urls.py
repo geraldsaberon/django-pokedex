@@ -21,5 +21,6 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pokedex/', include("pokedex.urls")),
+    path('pokedex/api-auth/', include('rest_framework.urls')),
     path('', RedirectView.as_view(url="pokedex/"))
 ]
