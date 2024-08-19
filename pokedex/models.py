@@ -31,10 +31,10 @@ class Pokemon(models.Model):
 
 class PokemonHasType(models.Model):
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
-    pokemon_type = models.ForeignKey(PokemonType, on_delete=models.CASCADE)
+    pokemon_type = models.ForeignKey(PokemonType, on_delete=models.CASCADE, blank=True, null=True)
     slot = models.SmallIntegerField()
     def __str__(self):
-        return f"slot {self.slot} {self.pokemon_type.name}"
+        return f"slot {self.slot} {self.pokemon_type}"
 
 class Stat(models.Model):
     pokemon = models.ForeignKey(Pokemon, related_name="stats", on_delete=models.CASCADE)

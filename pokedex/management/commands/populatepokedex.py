@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 sprite = res_json["sprites"]["front_default"]
                 sprite_slug = f"/static/pokemon-sprites/{os.path.split(sprite)[1]}"
                 abilities = [row["ability"]["name"] for row in res_json["abilities"]]
-                types = [{"name": row["type"]["name"], "slot": row["slot"]} for row in res_json["types"]]
+                types = [row["type"]["name"] for row in res_json["types"]]
                 stats = [(row["stat"]["name"], row["base_stat"]) for row in res_json["stats"]]
 
                 print(f"|| {str(pokemon_id).zfill(4)} {name} ")
@@ -55,23 +55,24 @@ class Command(BaseCommand):
                     sprite_slug=sprite_slug)
                 p.save()
 
+
+                type_1 = PokemonHasType(pokemon=p, slot=1)
+                type_2 = PokemonHasType(pokemon=p, slot=2)
+
+                for type_name, slot in zip(types, [type_1, type_2]):
+                    if not PokemonType.objects.filter(name=type_name).exists():
+                        PokemonType(name=type_name).save()
+                    slot.pokemon_type = PokemonType.objects.get(name=type_name)
+
                 for ability in abilities:
                     try:
                         p.abilities.create(name=ability)
                     except IntegrityError: # ability already exists in db
                         p.abilities.add(Ability.objects.get(name=ability))
-                for type_ in types:
-                    if not PokemonType.objects.filter(name=type_["name"]).exists():
-                        t = PokemonType(name=type_["name"])
-                        t.save()
 
-                    pt = PokemonHasType(
-                        pokemon=p,
-                        pokemon_type=PokemonType.objects.get(name=type_["name"]),
-                        slot=type_["slot"]
-                    )
-                    pt.save()
                 for stat_name, base_stat in stats:
                     p.stats.create(name=stat_name, base_stat=base_stat)
 
+                type_1.save()
+                type_2.save()
                 p.save()

@@ -23,8 +23,8 @@ def create_pokemon(
     ability2 = get_model_from_str(ability2,  Ability) if ability2 else None
     ability3 = get_model_from_str(ability3,  Ability) if ability3 else None
 
-    if type1: PokemonHasType(pokemon=pokemon, pokemon_type=type1, slot=1).save()
-    if type2: PokemonHasType(pokemon=pokemon, pokemon_type=type2, slot=2).save()
+    PokemonHasType(pokemon=pokemon, pokemon_type=type1, slot=1).save()
+    PokemonHasType(pokemon=pokemon, pokemon_type=type2, slot=2).save()
 
     pokemon.abilities.set([ability1, ability2, ability3])
 
@@ -50,11 +50,11 @@ def get_model_from_str(s, model):
 def update_pokemon(
         pokemon: Pokemon,
         name: str,
-        type1: PokemonType | str | None = None,
-        type2: PokemonType | str | None = None,
-        ability1:  Ability | str | None = None,
-        ability2:  Ability | str | None = None,
-        ability3:  Ability | str | None = None,
+        type1: PokemonType | None = None,
+        type2: PokemonType | None = None,
+        ability1:  Ability | None = None,
+        ability2:  Ability | None = None,
+        ability3:  Ability | None = None,
         hp = 0,
         attack = 0,
         defense = 0,
@@ -64,19 +64,17 @@ def update_pokemon(
 
     pokemon.name = name
 
-    if type1:
-        slot1 = PokemonHasType.objects.get(
-            pokemon=pokemon,
-            slot=1)
-        slot1.pokemon_type = type1
-        slot1.save()
+    slot1 = PokemonHasType.objects.get(
+        pokemon=pokemon,
+        slot=1)
+    slot1.pokemon_type = type1
+    slot1.save()
 
-    if type2:
-        slot2 = PokemonHasType.objects.get(
-            pokemon=pokemon,
-            slot=2)
-        slot2.pokemon_type = type2
-        slot2.save()
+    slot2 = PokemonHasType.objects.get(
+        pokemon=pokemon,
+        slot=2)
+    slot2.pokemon_type = type2
+    slot2.save()
 
     pokemon.abilities.set([
         ability1,
