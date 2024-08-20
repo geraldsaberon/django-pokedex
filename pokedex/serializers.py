@@ -29,7 +29,7 @@ class AbilitySerializer(ModelSerializer):
         if Ability.objects.filter(name=pokemon_ability).exists():
             return pokemon_ability
         else:
-            raise ValidationError(f"{pokemon_ability} is not a valid pokemon type")
+            raise ValidationError(f"{pokemon_ability} is not a valid pokemon ability")
 
 class StatSerializer(ModelSerializer):
     class Meta:
