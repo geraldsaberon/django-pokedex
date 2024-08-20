@@ -1,12 +1,17 @@
-from rest_framework.serializers import ChoiceField, ModelSerializer
+from rest_framework.serializers import ChoiceField, ModelSerializer, CharField, ValidationError
 
 from pokedex.models import Ability, Pokemon, PokemonHasType, PokemonType, Stat
 
 class PokemonTypeSerializer(ModelSerializer):
-    name = ChoiceField(choices=PokemonType.objects.values_list('name', flat=True))
+    name = CharField()
     class Meta:
         model = PokemonType
         fields = ["name"]
+    def validate_name(self, pokemon_type):
+        if PokemonType.objects.filter(name=pokemon_type).exists():
+            return pokemon_type
+        else:
+            raise ValidationError(f"{pokemon_type} is not a valid pokemon type")
 
 class PokemonHasTypeSerializer(ModelSerializer):
     type = PokemonTypeSerializer(source="pokemon_type")
@@ -16,10 +21,15 @@ class PokemonHasTypeSerializer(ModelSerializer):
         fields = ["type", "slot"]
 
 class AbilitySerializer(ModelSerializer):
-    name = ChoiceField(choices=Ability.objects.values_list('name', flat=True))
+    name = CharField()
     class Meta:
         model = Ability
         fields = ["name"]
+    def validate_name(self, pokemon_ability):
+        if Ability.objects.filter(name=pokemon_ability).exists():
+            return pokemon_ability
+        else:
+            raise ValidationError(f"{pokemon_ability} is not a valid pokemon type")
 
 class StatSerializer(ModelSerializer):
     class Meta:
