@@ -6,8 +6,13 @@
 
 {% block content %}
     {% if pokemons %}
-        <div class="mb-4">
+        <div class="mb-4 space-between">
             {% include 'pokedex/pokemon_type_filter.html' %}
+            <div>
+                {% with count=pokemons.count %}
+                    <span class="font-bold">{{ count }}</span> pokemon{{ count | pluralize }}
+                {% endwith %}
+            </div>
         </div>
         <div class="pokemon-grid">
         {% for pokemon in pokemons %}

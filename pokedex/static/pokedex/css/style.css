@@ -21,6 +21,14 @@ body {
     flex-direction: column;
     align-items: center;
 }
+.space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.font-bold {
+    font-weight: bold;
+}
 
 /* index page */
 .pokemon-grid {
