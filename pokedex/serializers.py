@@ -1,6 +1,7 @@
 from rest_framework.serializers import ChoiceField, ModelSerializer, CharField, ValidationError
 
 from pokedex.models import Ability, Pokemon, PokemonHasType, PokemonType, Stat
+from pokedex.utils import create_pokemon
 
 class PokemonTypeSerializer(ModelSerializer):
     name = CharField()
@@ -41,28 +42,30 @@ class PokemonSerializer(ModelSerializer):
     abilities = AbilitySerializer(many=True)
     stats = StatSerializer(many=True)
 
-    def create(self, validated_data):
-        pokemon = Pokemon(name=validated_data["name"])
-        pokemon.save()
+    def create(self, validated_data: dict):
+        name = validated_data["name"]
 
-        for t in validated_data["pokemonhastype_set"]:
-            type_ = t["pokemon_type"]["name"]
-            slot =  t["slot"]
-            PokemonHasType(
-                pokemon=pokemon,
-                pokemon_type=PokemonType.objects.get(name=type_),
-                slot=slot
-            ).save()
+        types = {"type1": None, "type2": None}
+        for i, a in enumerate(validated_data["pokemonhastype_set"]):
+            types[ f"type{a['slot']}" ] = a["pokemon_type"]["name"]
 
-        for ability in validated_data["abilities"]:
-            pokemon.abilities.add(
-                Ability.objects.get(name=ability["name"])
-            )
+        abilities = [None, None, None]
+        for i, a in enumerate(validated_data["abilities"]):
+            abilities[i] = a["name"]
 
-        for stat in validated_data["stats"]:
-            Stat(pokemon=pokemon, name=stat["name"], base_stat=stat["base_stat"]).save()
+        stats = {}
+        for s in validated_data["stats"]:
+            stats[s["name"].replace("-", "_")] = s["base_stat"]
 
-        pokemon.save()
+        pokemon = create_pokemon(
+            name = name,
+            ability1 = abilities[0],
+            ability2 = abilities[1],
+            ability3 = abilities[2],
+            **types,
+            **stats,
+        )
+
         return pokemon
 
     def update(self, instance: Pokemon, validated_data):
