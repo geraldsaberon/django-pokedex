@@ -16,8 +16,7 @@ class Ability(models.Model):
 class Pokemon(models.Model):
     national_pokedex_number = models.SmallIntegerField(unique=True, blank=True, null=True)
     name = models.CharField(max_length=100, unique=True)
-    sprite = models.URLField()
-    sprite_slug = models.CharField(max_length=100)
+    sprite_slug = models.CharField(max_length=100, blank=True, null=True)
     types = models.ManyToManyField(PokemonType, through="PokemonHasType")
     abilities = models.ManyToManyField(Ability)
     is_deleted = models.BooleanField(default=False)

@@ -3,11 +3,10 @@ from shutil import copyfileobj
 import os
 
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 import requests
 
-from ...models import Ability, Pokemon, PokemonHasType, PokemonType
-
+from ...models import Ability, Pokemon, PokemonType
+from ...utils import create_pokemon
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -23,7 +22,7 @@ class Command(BaseCommand):
         for i in range(1, 152): # only gen 1 (1-151) for now
             res = requests.get(f"https://pokeapi.co/api/v2/pokemon/{i}")
             if res.status_code == 200:
-                res_json = res.json()
+                res_json: dict = res.json()
 
                 pokemon_id = res_json["id"]
                 name = res_json["name"]
@@ -48,31 +47,25 @@ class Command(BaseCommand):
                     with open(sprite_file, "wb") as f:
                         copyfileobj(image_res.raw, f)
 
-                p = Pokemon(
-                    national_pokedex_number=pokemon_id,
-                    name=name,
-                    sprite=sprite_file,
-                    sprite_slug=sprite_slug)
-                p.save()
+                types = {"type1": None, "type2": None}
+                for a in res_json.get("types", []):
+                    types[ f"type{a['slot']}" ] = a["type"]["name"]
 
+                abilities = [None, None, None]
+                for i, a in enumerate(res_json.get("abilities", [])):
+                    abilities[i] = a["ability"]["name"]
 
-                type_1 = PokemonHasType(pokemon=p, slot=1)
-                type_2 = PokemonHasType(pokemon=p, slot=2)
+                stats = {}
+                for s in res_json.get("stats", []):
+                    stats[ s["stat"]["name"].replace("-", "_") ] = s["base_stat"]
 
-                for type_name, slot in zip(types, [type_1, type_2]):
-                    if not PokemonType.objects.filter(name=type_name).exists():
-                        PokemonType(name=type_name).save()
-                    slot.pokemon_type = PokemonType.objects.get(name=type_name)
-
-                for ability in abilities:
-                    try:
-                        p.abilities.create(name=ability)
-                    except IntegrityError: # ability already exists in db
-                        p.abilities.add(Ability.objects.get(name=ability))
-
-                for stat_name, base_stat in stats:
-                    p.stats.create(name=stat_name, base_stat=base_stat)
-
-                type_1.save()
-                type_2.save()
-                p.save()
+                create_pokemon(
+                    name = name,
+                    national_pokedex_number = pokemon_id,
+                    sprite_slug = sprite_slug,
+                    ability1 = abilities[0],
+                    ability2 = abilities[1],
+                    ability3 = abilities[2],
+                    **types,
+                    **stats
+                )

@@ -2,50 +2,50 @@ from pokedex.models import Ability, Pokemon, PokemonType, Stat, PokemonHasType
 
 def create_pokemon(
         name: str,
+        national_pokedex_number: int | None = None,
+        sprite_slug: str | None = None,
         type1: PokemonType | str | None = None,
         type2: PokemonType | str | None = None,
         ability1:  Ability | str | None = None,
         ability2:  Ability | str | None = None,
         ability3:  Ability | str | None = None,
-        hp = 0,
-        attack = 0,
-        defense = 0,
-        special_attack = 0,
-        special_defense = 0,
-        speed = 0,
+        hp: int = 0,
+        attack: int = 0,
+        defense: int = 0,
+        special_attack: int = 0,
+        special_defense: int = 0,
+        speed: int = 0,
     ):
-    pokemon = Pokemon(name=name)
+    pokemon = Pokemon(
+        name=name,
+        national_pokedex_number=national_pokedex_number,
+        sprite_slug=sprite_slug
+    )
     pokemon.save()
 
-    type1    = get_model_from_str(type1, PokemonType) if type1    else None
-    type2    = get_model_from_str(type2, PokemonType) if type2    else None
-    ability1 = get_model_from_str(ability1,  Ability) if ability1 else None
-    ability2 = get_model_from_str(ability2,  Ability) if ability2 else None
-    ability3 = get_model_from_str(ability3,  Ability) if ability3 else None
+    type_slot_1 = PokemonHasType(pokemon=pokemon, slot=1)
+    type_slot_2 = PokemonHasType(pokemon=pokemon, slot=2)
 
-    PokemonHasType(pokemon=pokemon, pokemon_type=type1, slot=1).save()
-    PokemonHasType(pokemon=pokemon, pokemon_type=type2, slot=2).save()
+    for type_name, slot in zip([type1, type2], [type_slot_1, type_slot_2]):
+        if not type_name: continue
+        if not PokemonType.objects.filter(name=type_name).exists():
+            PokemonType(name=type_name).save()
+        slot.pokemon_type = PokemonType.objects.get(name=type_name)
+        slot.save()
 
-    pokemon.abilities.set([ability1, ability2, ability3])
+    for ability in [ability1, ability2, ability3]:
+        if not ability: continue
+        if not Ability.objects.filter(name=ability).exists():
+            Ability(name=ability).save()
+        pokemon.abilities.add(Ability.objects.get(name=ability))
 
     stat_names  = ["hp", "attack", "defense", "special-attack", "special-defense", "speed"]
     stat_values = [hp, attack, defense, special_attack, special_defense, speed]
-    for stat_name, stat_value in zip(stat_names, stat_values):
-        Stat(pokemon=pokemon, name=stat_name, base_stat=stat_value).save()
+    for stat_name, base_stat in zip(stat_names, stat_values):
+        pokemon.stats.create(name=stat_name, base_stat=base_stat)
 
     pokemon.save()
     return pokemon
-
-
-def get_model_from_str(s, model):
-    """
-    Return an object from 'model' with name=s
-    if s is a string
-    """
-    if type(s) == str:
-        return model.objects.get(name=s)
-    return s
-
 
 def update_pokemon(
         pokemon: Pokemon,
