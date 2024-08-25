@@ -46,16 +46,16 @@ class PokemonSerializer(ModelSerializer):
         name = validated_data["name"]
 
         types = {"type1": None, "type2": None}
-        for i, a in enumerate(validated_data["pokemonhastype_set"]):
-            types[ f"type{a['slot']}" ] = a["pokemon_type"]["name"]
+        for type_ in validated_data["pokemonhastype_set"]:
+            types[ f"type{type_['slot']}" ] = type_["pokemon_type"]["name"]
 
         abilities = [None, None, None]
-        for i, a in enumerate(validated_data["abilities"]):
-            abilities[i] = a["name"]
+        for i, ability in enumerate(validated_data["abilities"]):
+            abilities[i] = ability["name"]
 
         stats = {}
-        for s in validated_data["stats"]:
-            stats[s["name"].replace("-", "_")] = s["base_stat"]
+        for stat in validated_data["stats"]:
+            stats[ stat["name"].replace("-", "_") ] = stat["base_stat"]
 
         pokemon = create_pokemon(
             name = name,
