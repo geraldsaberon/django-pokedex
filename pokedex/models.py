@@ -27,6 +27,8 @@ class Pokemon(models.Model):
         if self.national_pokedex_number:
             return str(self.national_pokedex_number).zfill(4)
         return "custom"
+    class Meta:
+        ordering = ["id"]
 
 class PokemonHasType(models.Model):
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
