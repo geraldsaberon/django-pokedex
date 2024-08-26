@@ -8,24 +8,29 @@ class PokemonEditForm(forms.Form):
     type1 = forms.ModelChoiceField(
         queryset=PokemonType.objects.order_by("name"),
         required=True,
-        label="Type")
+        label="Type",
+        to_field_name="name")
     type2 = forms.ModelChoiceField(
         queryset=PokemonType.objects.order_by("name"),
         required=False,
-        label="Type")
+        label="Type",
+        to_field_name="name")
 
     ability1 = forms.ModelChoiceField(
         queryset=Ability.objects.order_by("name"),
         required=True,
-        label="Ability")
+        label="Ability",
+        to_field_name="name")
     ability2 = forms.ModelChoiceField(
         queryset=Ability.objects.order_by("name"),
         required=False,
-        label="Ability")
+        label="Ability",
+        to_field_name="name")
     ability3 = forms.ModelChoiceField(
         queryset=Ability.objects.order_by("name"),
         required=False,
-        label="Ability")
+        label="Ability",
+        to_field_name="name")
 
     hp              = forms.IntegerField(min_value=0)
     attack          = forms.IntegerField(min_value=0)
